@@ -1,5 +1,7 @@
 package vc.min.ryan.addressbook;
 
+import android.content.Context;
+import android.content.Intent;
 import android.provider.LiveFolders;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,42 +9,48 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private RecyclerView mRecyclerView;
+    private BookManager mBookManager;
+    private PersonAdapter mAdapter;
+    private ImageButton mAddButton;
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = this;
+        mAddButton = (ImageButton) findViewById(R.id.add_button);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, AddActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.people_list);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-    }
 
+        mBookManager = new BookManager(this); // Init the addressbook manager
+        mAdapter = new PersonAdapter(mBookManager.getData());
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onResume(){
+        super.onResume();
+        mAdapter.updateData(mBookManager.getData());
+        mAdapter.notifyDataSetChanged();
     }
+
 }
