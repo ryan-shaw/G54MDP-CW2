@@ -1,6 +1,9 @@
 package vc.min.ryan.addressbook;
 
+import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import java.util.List;
  */
 public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     private List<Person> mDataset;
+    private final String TAG = "PersonAdapter";
 
     public PersonAdapter(List<Person> data){
         this.mDataset = data;
@@ -23,6 +27,11 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         Person person = mDataset.get(position);
         holder.name.setText(person.getFirstName() + " " + person.getLastName());
         holder.phone.setText(person.getPhoneNumber());
+        byte[] photo = person.getPhoto();
+        if(photo != null) {
+            holder.photo.setImageBitmap(BitmapFactory.decodeByteArray(photo, 0, photo.length));
+            Log.d(TAG, "Setting photo");
+        }
     }
 
     @Override

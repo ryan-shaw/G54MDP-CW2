@@ -31,6 +31,7 @@ public class PersonContentProvider extends ContentProvider {
     public static final String LAST_NAME       = "lastName";
     public static final String PHONE_NUMBER    = "phone";
     public static final String EMAIL           = "email";
+    public static final String PHOTO           = "photo";
 
     private static final int        CONTACTS    = 1;
     private static final int        PERSON      = 2;
@@ -43,14 +44,15 @@ public class PersonContentProvider extends ContentProvider {
     private SQLiteDatabase mDb;
     private static final String DATABASE_NAME = "Contacts";
     static final String TABLE_NAME = "contacts";
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 2;
     static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME +
             " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             " firstName TEXT NOT NULL, " +
             " lastName TEXT NOT NULL, " +
             " phone TEXT NOT NULL, " +
-            " email TEXT NOT NULL);";
+            " email TEXT NOT NULL, " +
+            " photo BLOB);";
 
     private static HashMap<String, String> CONTACTS_MAP;
 

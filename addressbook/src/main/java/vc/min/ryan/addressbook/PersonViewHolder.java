@@ -2,6 +2,7 @@ package vc.min.ryan.addressbook;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -14,11 +15,13 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public TextView name;
     public TextView phone;
+    public ImageView photo;
 
     public PersonViewHolder(View v){
         super(v);
         name = (TextView) v.findViewById(R.id.name);
         phone = (TextView) v.findViewById(R.id.phone);
+        photo = (ImageView) v.findViewById(R.id.mA_photo);
     }
 
     public interface ClickListener{
