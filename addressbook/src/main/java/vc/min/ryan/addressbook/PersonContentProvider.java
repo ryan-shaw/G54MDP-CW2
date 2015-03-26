@@ -22,53 +22,21 @@ import java.util.HashMap;
  * content://vc.min.ryan.addressbook/contacts/:id
  */
 public class PersonContentProvider extends ContentProvider {
-    private static final String PROVIDER    = "vc.min.ryan.addressbook.Contacts";
-    private static final String URL         = "content://" + PROVIDER + "/contacts";
-    public static final Uri CONTENT_URI     = Uri.parse(URL);
 
-    public static final String _ID             = "_id";
-    public static final String FIRST_NAME      = "firstName";
-    public static final String LAST_NAME       = "lastName";
-    public static final String PHONE_NUMBER    = "phone";
-    public static final String EMAIL           = "email";
-    public static final String PHOTO           = "photo";
-
-    private static final int        CONTACTS    = 1;
-    private static final int        PERSON      = 2;
-    private static final UriMatcher sUriMatcher;
-    static{
-        sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI("vc.min.ryan.addressbook.Contacts", "contacts", CONTACTS);
-        sUriMatcher.addURI("vc.min.ryan.addressbook.Contacts", "contacts/#", PERSON);
-    }
     private SQLiteDatabase mDb;
-    private static final String DATABASE_NAME = "Contacts";
-    static final String TABLE_NAME = "contacts";
-    static final int DATABASE_VERSION = 2;
-    static final String CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME +
-            " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            " firstName TEXT NOT NULL, " +
-            " lastName TEXT NOT NULL, " +
-            " phone TEXT NOT NULL, " +
-            " email TEXT NOT NULL, " +
-            " photo BLOB);";
-
-    private static HashMap<String, String> CONTACTS_MAP;
-
     private static class DatabaseHelper extends SQLiteOpenHelper{
         DatabaseHelper(Context context){
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            super(context, AddressBookContract.DATABASE_NAME, null, AddressBookContract.DATABASE_VERSION);
         }
 
         @Override
         public void onCreate(SQLiteDatabase db){
-            db.execSQL(CREATE_TABLE);
+            db.execSQL(AddressBookContract.CREATE_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + AddressBookContract.TABLE_NAME);
             onCreate(db);
         }
     }
@@ -82,9 +50,9 @@ public class PersonContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values){
-        long insertId = mDb.insert(TABLE_NAME, "", values);
+        long insertId = mDb.insert(AddressBookContract.TABLE_NAME, "", values);
         if(insertId > 0){
-            Uri luri = ContentUris.withAppendedId(CONTENT_URI, insertId);
+            Uri luri = ContentUris.withAppendedId(AddressBookContract.CONTENT_URI, insertId);
             getContext().getContentResolver().notifyChange(luri, null);
             return uri;
         }
@@ -95,20 +63,20 @@ public class PersonContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder){
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(TABLE_NAME);
-        switch(sUriMatcher.match(uri)){
-            case CONTACTS:
-                builder.setProjectionMap(CONTACTS_MAP);
+        builder.setTables(AddressBookContract.TABLE_NAME);
+        switch(AddressBookContract.sUriMatcher.match(uri)){
+            case AddressBookContract.CONTACTS:
+                builder.setProjectionMap(AddressBookContract.CONTACTS_MAP);
             break;
-            case PERSON:
-                builder.appendWhere(_ID + "=" + uri.getPathSegments().get(1));
+            case AddressBookContract.PERSON:
+                builder.appendWhere(AddressBookContract._ID + "=" + uri.getPathSegments().get(1));
             break;
             default:
                 throw new IllegalArgumentException("unknown uri " + uri);
         }
         if(sortOrder == null || sortOrder == ""){
             // Set to order by first name
-            sortOrder = FIRST_NAME;
+            sortOrder = AddressBookContract.FIRST_NAME;
         }
         Cursor c = builder.query(mDb, projection, selection, selectionArgs, null, null, sortOrder);
         c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -118,13 +86,13 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs){
         int count = 0;
-        switch(sUriMatcher.match(uri)){
-            case CONTACTS:
-                count = mDb.delete(TABLE_NAME, selection, selectionArgs);
+        switch(AddressBookContract.sUriMatcher.match(uri)){
+            case AddressBookContract.CONTACTS:
+                count = mDb.delete(AddressBookContract.TABLE_NAME, selection, selectionArgs);
                 break;
-            case PERSON:
+            case AddressBookContract.PERSON:
                 String id = uri.getPathSegments().get(1);
-                count = mDb.delete(TABLE_NAME, _ID + " = " + id + (!TextUtils.isEmpty(selection) ?
+                count = mDb.delete(AddressBookContract.TABLE_NAME, AddressBookContract._ID + " = " + id + (!TextUtils.isEmpty(selection) ?
                 " AND (" + selection + ")" : ""), selectionArgs);
             default:
                 throw new IllegalArgumentException("unknown uri " + uri);
@@ -136,12 +104,12 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs){
         int count = 0;
-        switch(sUriMatcher.match(uri)){
-            case CONTACTS:
-                count = mDb.update(TABLE_NAME, values, selection, selectionArgs);
+        switch(AddressBookContract.sUriMatcher.match(uri)){
+            case AddressBookContract.CONTACTS:
+                count = mDb.update(AddressBookContract.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case PERSON:
-                count = mDb.update(TABLE_NAME, values, _ID + " = " + uri.getPathSegments().get(1) +
+            case AddressBookContract.PERSON:
+                count = mDb.update(AddressBookContract.TABLE_NAME, values, AddressBookContract._ID + " = " + uri.getPathSegments().get(1) +
                         (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
                         selectionArgs);
                 break;
@@ -154,11 +122,11 @@ public class PersonContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri){
-        switch(sUriMatcher.match(uri)){
-            case CONTACTS:
-                return "vnd.android.cursor.dir/vnd.vc.min.addressbook." + TABLE_NAME;
-            case PERSON:
-                return "vnd.android.cursor.item/vnd.vc.min.addressbook."+ TABLE_NAME;
+        switch(AddressBookContract.sUriMatcher.match(uri)){
+            case AddressBookContract.CONTACTS:
+                return "vnd.android.cursor.dir/vnd.vc.min.addressbook." + AddressBookContract.TABLE_NAME;
+            case AddressBookContract.PERSON:
+                return "vnd.android.cursor.item/vnd.vc.min.addressbook."+ AddressBookContract.TABLE_NAME;
             default:
                 throw new IllegalArgumentException("unsupported uri " + uri);
         }

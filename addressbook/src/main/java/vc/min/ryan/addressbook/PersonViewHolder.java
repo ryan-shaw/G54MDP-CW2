@@ -22,6 +22,7 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
         name = (TextView) v.findViewById(R.id.name);
         phone = (TextView) v.findViewById(R.id.phone);
         photo = (ImageView) v.findViewById(R.id.mA_photo);
+        v.setOnClickListener(this);
     }
 
     public interface ClickListener{

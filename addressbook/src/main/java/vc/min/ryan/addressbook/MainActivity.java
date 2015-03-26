@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         mRecyclerView.setLayoutManager(layoutManager);
 
         mBookManager = new BookManager(this); // Init the addressbook manager
-        mAdapter = new PersonAdapter(mBookManager.getData());
+        mAdapter = new PersonAdapter(mBookManager.getData(), this);
 
         mRecyclerView.setAdapter(mAdapter);
     }

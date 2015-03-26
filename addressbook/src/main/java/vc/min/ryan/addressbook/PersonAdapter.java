@@ -1,6 +1,9 @@
 package vc.min.ryan.addressbook;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,9 +19,11 @@ import java.util.List;
 public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     private List<Person> mDataset;
     private final String TAG = "PersonAdapter";
+    private Context mContext;
 
-    public PersonAdapter(List<Person> data){
+    public PersonAdapter(List<Person> data, Context context){
         this.mDataset = data;
+        this.mContext = context;
     }
 
     @Override
@@ -32,6 +37,17 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
             holder.photo.setImageBitmap(BitmapFactory.decodeByteArray(photo, 0, photo.length));
             Log.d(TAG, "Setting photo");
         }
+        holder.setClickListener(new PersonViewHolder.ClickListener() {
+            @Override
+            public void onClick(View v, int position, boolean isLongClick) {
+//                Person person = mDataset.get(position);
+//                String phone = person.getPhoneNumber();
+//                Intent intent = new Intent(Intent.ACTION_DIAL);
+//                intent.setData(Uri.parse("tel:" + phone));
+//                mContext.startActivity(intent);
+
+            }
+        });
     }
 
     @Override
