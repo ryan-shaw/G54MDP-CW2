@@ -22,7 +22,7 @@ public class BookManager {
 
     public List<Person> getData(){
         ArrayList<Person> data = new ArrayList<Person>();
-        data.add(new Person("Ryan", "Shaw", "0797227977", "ryan.shaw@min.vc", null));
+        //data.add(new Person("Ryan", "Shaw", "0797227977", "ryan.shaw@min.vc", null));
 
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, null, null, "firstName");
         c.moveToFirst();
@@ -35,6 +35,7 @@ public class BookManager {
 
     public Person getPersonFromCursor(Cursor c){
         Person person = new Person(
+                c.getInt(c.getColumnIndex("_id")),
                 c.getString(c.getColumnIndex(AddressBookContract.FIRST_NAME)),
                 c.getString(c.getColumnIndex(AddressBookContract.LAST_NAME)),
                 c.getString(c.getColumnIndex(AddressBookContract.PHONE_NUMBER)),

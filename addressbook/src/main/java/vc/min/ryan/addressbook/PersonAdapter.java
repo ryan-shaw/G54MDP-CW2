@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,12 +41,11 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         holder.setClickListener(new PersonViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick) {
-//                Person person = mDataset.get(position);
-//                String phone = person.getPhoneNumber();
-//                Intent intent = new Intent(Intent.ACTION_DIAL);
-//                intent.setData(Uri.parse("tel:" + phone));
-//                mContext.startActivity(intent);
-
+                Person person = mDataset.get(position);
+                Intent intent = new Intent(mContext, PersonActivity.class);
+                intent.putExtra("personId", person.getId());
+                Log.d(TAG, "Starting new person activity: " + person.getId());
+                mContext.startActivity(intent);
             }
         });
     }

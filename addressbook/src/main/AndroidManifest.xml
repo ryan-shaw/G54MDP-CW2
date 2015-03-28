@@ -21,6 +21,10 @@
             android:name=".AddActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".PersonActivity"
+            android:label="Person">
+        </activity>
         <provider
             android:authorities="vc.min.ryan.addressbook.Contacts"
             android:name="PersonContentProvider">
