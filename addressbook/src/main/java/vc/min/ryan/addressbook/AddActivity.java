@@ -65,6 +65,10 @@ public class AddActivity extends ActionBarActivity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!dataOK()){
+                    Toast.makeText(mContext, "Something went wrong, please check data", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 Uri uri = bookManager.addContact(mFirstName.getText().toString(),
                         mLastName.getText().toString(), mPhone.getText().toString(),
@@ -76,6 +80,17 @@ public class AddActivity extends ActionBarActivity {
                 finish();
             }
         });
+    }
+
+    private boolean dataOK(){
+        if(mFirstName.getText().length() == 0)
+            return false;
+        if(mLastName.getText().length() == 0)
+            return false;
+        if(mPhone.getText().length() == 0)
+            return false;
+        // Email is optional so is a photo
+        return true;
     }
 
     @Override

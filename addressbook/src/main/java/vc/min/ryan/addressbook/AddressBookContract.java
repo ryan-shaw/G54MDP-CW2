@@ -31,7 +31,7 @@ public final class AddressBookContract {
 
     public static final String DATABASE_NAME = "Contacts";
     public static final String TABLE_NAME = "contacts";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME +
                     " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +

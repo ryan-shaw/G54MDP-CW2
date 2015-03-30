@@ -1,6 +1,7 @@
 package vc.min.ryan.addressbook;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -65,6 +66,10 @@ public class Person {
 
     public byte[] getPhoto(){
         return photo;
+    }
+
+    public Bitmap getPhotoBM(){
+        return BitmapFactory.decodeByteArray(photo, 0, photo.length);
     }
 
     public void setPhoto(byte[] photo){

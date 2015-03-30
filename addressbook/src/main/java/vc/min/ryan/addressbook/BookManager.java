@@ -20,6 +20,12 @@ public class BookManager {
         this.mContext = context;
     }
 
+    public Person getPerson(int id){
+        Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, AddressBookContract._ID + "=" + id, null, null);
+        c.moveToFirst();
+        return getPersonFromCursor(c);
+    }
+
     public List<Person> getData(){
         ArrayList<Person> data = new ArrayList<Person>();
         //data.add(new Person("Ryan", "Shaw", "0797227977", "ryan.shaw@min.vc", null));
