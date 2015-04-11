@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,8 @@ public class MainActivity extends ActionBarActivity {
     private PersonAdapter mAdapter;
     private ImageButton mAddButton;
     private Context mContext;
+
+    private final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,19 @@ public class MainActivity extends ActionBarActivity {
         mAdapter = new PersonAdapter(mBookManager.getData(), this);
 
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override public void onItemClick(View v, int pos) {
+                Log.d(TAG, "Short click");
+                Person person = mBookManager.getData().get(pos);
+                Intent intent = new Intent(mContext, PersonActivity.class);
+                intent.putExtra("personId", person.getId());
+                Log.d(TAG, "Starting new person activity: " + person.getId());
+                mContext.startActivity(intent);
+            }
+            @Override public void onItemLongClick(View v, int pos){
+                Log.d(TAG, "Long click");
+            }
+        }));
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.w3c.dom.Text;
 /**
  * Created by Ryan on 25/03/2015.
  */
-public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
     private ClickListener clickListener;
 
     public TextView name;
@@ -27,6 +27,7 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public interface ClickListener{
         public void onClick(View v, int position, boolean isLongClick);
+        public boolean onItemLongClick(RecyclerView p, View c, int pos, long id);
     }
 
     public void setClickListener(ClickListener clickListener){
@@ -36,5 +37,11 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v){
         clickListener.onClick(v, getPosition(), false);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        clickListener.onClick(v, getPosition(), true);
+        return true;
     }
 }

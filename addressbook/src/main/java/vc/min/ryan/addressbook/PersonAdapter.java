@@ -38,21 +38,12 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
             holder.photo.setImageBitmap(BitmapFactory.decodeByteArray(photo, 0, photo.length));
             Log.d(TAG, "Setting photo");
         }
-        holder.setClickListener(new PersonViewHolder.ClickListener() {
-            @Override
-            public void onClick(View v, int position, boolean isLongClick) {
-                Person person = mDataset.get(position);
-                Intent intent = new Intent(mContext, PersonActivity.class);
-                intent.putExtra("personId", person.getId());
-                Log.d(TAG, "Starting new person activity: " + person.getId());
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_item, parent, false);
+
         return new PersonViewHolder(v);
     }
 
