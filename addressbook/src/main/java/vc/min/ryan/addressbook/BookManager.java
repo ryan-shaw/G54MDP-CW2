@@ -64,4 +64,8 @@ public class BookManager {
         Uri uri = mContext.getContentResolver().insert(AddressBookContract.CONTENT_URI, values);
         return uri;
     }
+
+    public void deleteContact(int id){
+        mContext.getContentResolver().delete(AddressBookContract.CONTENT_URI, "_id="+id, null);
+    }
 }

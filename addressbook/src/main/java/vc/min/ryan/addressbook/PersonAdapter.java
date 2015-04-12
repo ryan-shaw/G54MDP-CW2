@@ -55,4 +55,8 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         this.mDataset = data;
     }
 
+    public List<Person> getData(){
+        return mDataset;
+    }
+
 }

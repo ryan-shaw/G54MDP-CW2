@@ -2,6 +2,8 @@ package vc.min.ryan.addressbook;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.provider.LiveFolders;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.view.View;
 import android.widget.ImageButton;
 
 
+
+
 public class MainActivity extends ActionBarActivity {
 
     private RecyclerView mRecyclerView;
@@ -21,6 +25,7 @@ public class MainActivity extends ActionBarActivity {
     private PersonAdapter mAdapter;
     private ImageButton mAddButton;
     private Context mContext;
+    private int position;
 
     private final String TAG = "MainActivity";
 
@@ -58,8 +63,19 @@ public class MainActivity extends ActionBarActivity {
             }
             @Override public void onItemLongClick(View v, int pos){
                 Log.d(TAG, "Long click");
+                // Open up context menu
+                position = pos;
+
             }
         }));
+
+        getContentResolver().registerContentObserver(AddressBookContract.CONTENT_URI, true, new ContentObserver(new Handler()){
+            @Override
+            public void onChange(boolean selfChange) {
+                mAdapter.updateData(mBookManager.getData());
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -67,6 +83,21 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         mAdapter.updateData(mBookManager.getData());
         mAdapter.notifyDataSetChanged();
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d(TAG, position + ":" + item.getItemId());
+        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case 0 /* Edit */:
+
+            break;
+            case 1 /* Delete */:
+                Person person = mAdapter.getData().get(position);
+                mBookManager.deleteContact(person.getId());
+            break;
+        }
+        return super.onContextItemSelected(item);
     }
 
 }
