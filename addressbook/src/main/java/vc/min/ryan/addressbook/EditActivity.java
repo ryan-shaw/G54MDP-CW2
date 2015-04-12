@@ -2,18 +2,12 @@ package vc.min.ryan.addressbook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
-import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,19 +16,23 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+/**
+ * Created by Ryan on 12/04/2015.
+ */
+public class EditActivity extends ActionBarActivity {
 
-public class AddActivity extends ActionBarActivity {
-
-    private Button mAddButton;
+    private Button mEditButton;
     private Context mContext;
     private TextView mFirstName;
     private TextView mLastName;
     private TextView mPhone;
     private TextView mEmail;
     private ImageView mPhoto;
+    private BookManager mBookManager;
 
     private final int RESULT_LOAD_IMAGE = 1;
-    private final String TAG = "AddActivity";
+    private final String TAG = "EditActivity";
+    private int _id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +40,20 @@ public class AddActivity extends ActionBarActivity {
         setContentView(R.layout.activity_add);
         mContext = this;
 
-        final BookManager bookManager = new BookManager(this);
+        Intent intent = getIntent();
+        _id = intent.getIntExtra("personId", -1);
+
+        mBookManager = new BookManager(this);
 
 
-        mAddButton = (Button) findViewById(R.id.add_contact);
+        mEditButton = (Button) findViewById(R.id.add_contact);
         mFirstName = (TextView) findViewById(R.id.firstName);
         mLastName = (TextView) findViewById(R.id.lastName);
         mPhone = (TextView) findViewById(R.id.phone);
         mEmail = (TextView) findViewById(R.id.email);
         mPhoto = (ImageView) findViewById(R.id.photo);
+
+        mEditButton.setText("Edit"); // Update text
 
         mPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -62,12 +65,14 @@ public class AddActivity extends ActionBarActivity {
             }
         });
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean success = bookManager.addContact(mFirstName.getText().toString(),
-                        mLastName.getText().toString(), mPhone.getText().toString(),
-                        mEmail.getText().toString(), ((BitmapDrawable)mPhoto.getDrawable()).getBitmap());
+                Log.d(TAG, "Save");
+                boolean success = mBookManager.editContact(_id, mFirstName.getText().toString(),
+                      mLastName.getText().toString(), mPhone.getText().toString(),
+                      mEmail.getText().toString(), ((BitmapDrawable)mPhoto.getDrawable()).getBitmap());
+
                 if(!success){
                     Toast.makeText(mContext, "Something went wrong, check data", Toast.LENGTH_LONG).show();
                 }else{
@@ -75,6 +80,21 @@ public class AddActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Person person = mBookManager.getPerson(_id);
+        if(person == null) {
+            Toast.makeText(this, "Person not found", Toast.LENGTH_LONG).show();
+            return;
+        }
+        mFirstName.setText(person.getFirstName());
+        mLastName.setText(person.getLastName());
+        mPhone.setText(person.getPhoneNumber());
+        mEmail.setText(person.getEmail());
+        mPhoto.setImageBitmap(person.getPhotoBM());
     }
 
     @Override

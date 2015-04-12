@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <uses-permission android:name="android.permission.CALL_PHONE" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -22,6 +23,10 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".EditActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".PersonActivity"
             android:label="Person">
         </activity>
@@ -32,5 +37,6 @@
             <uses-permission android:name="vc.min.ryan.addressbook.WRITE_CONTACTS"/>
             </provider>
     </application>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

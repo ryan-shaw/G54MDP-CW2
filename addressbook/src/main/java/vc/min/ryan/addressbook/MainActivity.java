@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
         getContentResolver().registerContentObserver(AddressBookContract.CONTENT_URI, true, new ContentObserver(new Handler()){
             @Override
             public void onChange(boolean selfChange) {
-                mAdapter.updateData(mBookManager.getData());
+//                mAdapter.updateData(mBookManager.getData());
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -90,7 +90,9 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
         switch (item.getItemId()) {
             case 0 /* Edit */:
-
+                Intent intent = new Intent(mContext, EditActivity.class);
+                intent.putExtra("personId", mAdapter.getData().get(position).getId());
+                mContext.startActivity(intent);
             break;
             case 1 /* Delete */:
                 Person person = mAdapter.getData().get(position);

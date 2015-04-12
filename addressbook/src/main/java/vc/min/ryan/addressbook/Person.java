@@ -2,6 +2,7 @@ package vc.min.ryan.addressbook;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -17,9 +18,9 @@ public class Person {
     private String lastName;
     private String phoneNumber;
     private String email;
-    private byte[] photo;
+    private String photo;
 
-    public Person(int id, String firstName, String lastName, String phoneNumber, String email, byte[] photo){
+    public Person(int id, String firstName, String lastName, String phoneNumber, String email, String photo){
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -64,16 +65,21 @@ public class Person {
         this.email = email;
     }
 
-    public byte[] getPhoto(){
+    public String getPhoto(){
         return photo;
     }
 
-    public Bitmap getPhotoBM(){
-        return BitmapFactory.decodeByteArray(photo, 0, photo.length);
+    public Bitmap getPhotoBM() {
+        String photoPath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/media/" + photo;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        final Bitmap b = BitmapFactory.decodeFile(photoPath, options);
+        return b;
     }
 
-    public void setPhoto(byte[] photo){
+    public void setPhoto(String photo){
         this.photo = photo;
     }
+
 
 }

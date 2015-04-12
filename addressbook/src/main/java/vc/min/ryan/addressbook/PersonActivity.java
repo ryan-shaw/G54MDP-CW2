@@ -35,6 +35,6 @@ public class PersonActivity extends Activity {
 
         mPicture.setImageBitmap(person.getPhotoBM());
 
-        Log.d(TAG, ""+ person.getFirstName());
+        Log.d(TAG, ""+ person.getPhoto());
     }
 }
