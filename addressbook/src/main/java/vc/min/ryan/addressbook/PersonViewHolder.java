@@ -11,6 +11,8 @@ import org.w3c.dom.Text;
 
 /**
  * Created by Ryan on 25/03/2015.
+ *
+ * PersonViewHolder, the view holder for the recyclerview in the main activity
  */
 public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, View.OnCreateContextMenuListener{
     private ClickListener clickListener;
@@ -24,13 +26,11 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
         name = (TextView) v.findViewById(R.id.name);
         phone = (TextView) v.findViewById(R.id.phone);
         photo = (ImageView) v.findViewById(R.id.mA_photo);
-        v.setOnClickListener(this);
         v.setOnCreateContextMenuListener(this);
     }
 
     public interface ClickListener{
         public void onClick(View v, int position, boolean isLongClick);
-        public boolean onItemLongClick(RecyclerView p, View c, int pos, long id);
     }
 
     @Override
@@ -40,10 +40,6 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
         menu.add(Menu.NONE, 0, Menu.NONE, "Edit");//groupId, itemId, order, title
         menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
 
-    }
-
-    public void setClickListener(ClickListener clickListener){
-        this.clickListener = clickListener;
     }
 
     @Override

@@ -62,17 +62,16 @@ public class MainActivity extends ActionBarActivity {
                 mContext.startActivity(intent);
             }
             @Override public void onItemLongClick(View v, int pos){
-                Log.d(TAG, "Long click");
-                // Open up context menu
                 position = pos;
-
             }
         }));
 
+        // Gets called when database updated
         getContentResolver().registerContentObserver(AddressBookContract.CONTENT_URI, true, new ContentObserver(new Handler()){
             @Override
             public void onChange(boolean selfChange) {
-//                mAdapter.updateData(mBookManager.getData());
+                Log.d(TAG, "Test");
+                mAdapter.updateData(mBookManager.getData());
                 mAdapter.notifyDataSetChanged();
             }
         });

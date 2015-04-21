@@ -55,7 +55,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         holder.name.setText(person.getFirstName() + " " + person.getLastName());
         holder.phone.setText(person.getPhoneNumber());
         // Set ImageView via AsyncTask
-        BitmapWorkerTask task = new BitmapWorkerTask((ImageView) holder.photo, person);
+        BitmapWorkerTask task = new BitmapWorkerTask(mContext, (ImageView) holder.photo, person);
         task.execute(0);
     }
 

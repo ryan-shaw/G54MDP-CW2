@@ -22,16 +22,16 @@ public final class AddressBookContract {
 
     public static final int        CONTACTS    = 1;
     public static final int        PERSON      = 2;
-    public static final UriMatcher sUriMatcher;
+    public static final UriMatcher URI_MATCHER;
     static{
-        sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI("vc.min.ryan.addressbook.Contacts", "contacts", CONTACTS);
-        sUriMatcher.addURI("vc.min.ryan.addressbook.Contacts", "contacts/#", PERSON);
+        URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+        URI_MATCHER.addURI("vc.min.ryan.addressbook.Contacts", "contacts", CONTACTS);
+        URI_MATCHER.addURI("vc.min.ryan.addressbook.Contacts", "contacts/#", PERSON);
     }
 
     public static final String DATABASE_NAME = "Contacts";
     public static final String TABLE_NAME = "contacts";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME +
                     " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -39,7 +39,7 @@ public final class AddressBookContract {
                     " lastName TEXT NOT NULL, " +
                     " phone TEXT NOT NULL, " +
                     " email TEXT NOT NULL, " +
-                    " photo TEXT NOT NULL);";
+                    " photo TEXT);";
 
     public static HashMap<String, String> CONTACTS_MAP;
 }

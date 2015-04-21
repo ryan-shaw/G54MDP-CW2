@@ -4,17 +4,12 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * Created by Ryan on 25/03/2015.
@@ -23,7 +18,6 @@ import java.util.HashMap;
  */
 public class PersonContentProvider extends ContentProvider {
 
-    private SQLiteDatabase mDb;
     private static class DatabaseHelper extends SQLiteOpenHelper{
         DatabaseHelper(Context context){
             super(context, AddressBookContract.DATABASE_NAME, null, AddressBookContract.DATABASE_VERSION);
@@ -40,6 +34,8 @@ public class PersonContentProvider extends ContentProvider {
             onCreate(db);
         }
     }
+
+    private SQLiteDatabase mDb;
 
     @Override
     public boolean onCreate(){
@@ -62,9 +58,12 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder){
+        // Create the query builder
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        // Set the table to execute query on
         builder.setTables(AddressBookContract.TABLE_NAME);
-        switch(AddressBookContract.sUriMatcher.match(uri)){
+        // Are we matching for a single contact or all contacts
+        switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 builder.setProjectionMap(AddressBookContract.CONTACTS_MAP);
             break;
@@ -86,7 +85,7 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs){
         int count = 0;
-        switch(AddressBookContract.sUriMatcher.match(uri)){
+        switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 count = mDb.delete(AddressBookContract.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -104,7 +103,7 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs){
         int count = 0;
-        switch(AddressBookContract.sUriMatcher.match(uri)){
+        switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 count = mDb.update(AddressBookContract.TABLE_NAME, values, selection, selectionArgs);
                 break;
@@ -122,7 +121,7 @@ public class PersonContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri){
-        switch(AddressBookContract.sUriMatcher.match(uri)){
+        switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 return "vnd.android.cursor.dir/vnd.vc.min.addressbook." + AddressBookContract.TABLE_NAME;
             case AddressBookContract.PERSON:

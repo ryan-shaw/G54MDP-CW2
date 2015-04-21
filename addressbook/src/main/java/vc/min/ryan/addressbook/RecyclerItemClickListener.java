@@ -16,6 +16,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     private OnItemClickListener mListener;
     private GestureDetector mGestureDetector;
 
+    // As we want long press as well we need to use touch listener rather than click listener
     public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener)
     {
         mListener = listener;

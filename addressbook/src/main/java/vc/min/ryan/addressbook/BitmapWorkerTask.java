@@ -1,6 +1,8 @@
 package vc.min.ryan.addressbook;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
@@ -12,18 +14,22 @@ import java.lang.ref.WeakReference;
 class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
     private int data = 0;
-    private Person person;
+    private Person mPerson;
+    private Context mContext;
 
-    public BitmapWorkerTask(ImageView imageView, Person person) {
+    public BitmapWorkerTask(Context context, ImageView imageView, Person mPerson) {
         // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<ImageView>(imageView);
-        this.person = person;
+        this.mContext = context;
+        this.mPerson = mPerson;
     }
 
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(Integer... params) {
-        Bitmap photo = person.getPhotoBM();
+        if(mPerson.getPhotoPath() == null)
+           return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.select);
+        Bitmap photo = mPerson.getPhotoBM();
         return photo;
     }
 

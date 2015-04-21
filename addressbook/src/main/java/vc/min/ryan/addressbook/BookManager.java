@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class BookManager {
     private Context mContext;
-    private final String TAG = "BookManager";
+    private static final String TAG = "BookManager";
 
     public BookManager(Context context){
         this.mContext = context;
@@ -35,13 +36,13 @@ public class BookManager {
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, AddressBookContract._ID + "=" + id, null, null);
         if(!c.moveToFirst())
             return null;
-        return getPersonFromCursor(c);
+        Person person = getPersonFromCursor(c);
+        c.close();
+        return person;
     }
 
     public List<Person> getData(){
         ArrayList<Person> data = new ArrayList<Person>();
-        //data.add(new Person("Ryan", "Shaw", "0797227977", "ryan.shaw@min.vc", null));
-
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, null, null, "firstName");
 
         c.moveToFirst();
@@ -49,6 +50,7 @@ public class BookManager {
             data.add(getPersonFromCursor(c));
             c.moveToNext();
         }
+        c.close();
         return data;
     }
 
@@ -63,7 +65,7 @@ public class BookManager {
         return person;
     }
 
-    public boolean addContact(String firstName, String lastName, String phone, String email, Bitmap photo){
+    public boolean addContact(String firstName, String lastName, String phone, String email, String photoPath){
 
         if(firstName.length() == 0)
             return false;
@@ -71,8 +73,6 @@ public class BookManager {
             return false;
         if(phone.length() == 0)
             return false;
-
-        String photoPath = saveFile(photo);
 
         ContentValues values = new ContentValues();
         values.put(AddressBookContract.FIRST_NAME, firstName);
@@ -86,7 +86,7 @@ public class BookManager {
     }
 
     public boolean editContact(int id, String firstName, String lastName, String phone, String email,
-                               Bitmap photo){
+                               String photoPath){
         if(firstName.length() == 0)
             return false;
         if(lastName.length() == 0)
@@ -94,21 +94,20 @@ public class BookManager {
         if(phone.length() == 0)
             return false;
 
-        String photoPath = saveFile(photo);
         ContentValues values = new ContentValues();
         values.put(AddressBookContract.FIRST_NAME, firstName);
         values.put(AddressBookContract.LAST_NAME, lastName);
         values.put(AddressBookContract.PHONE_NUMBER, phone);
         values.put(AddressBookContract.EMAIL, email);
         values.put(AddressBookContract.PHOTO, photoPath);
-
-        int res = mContext.getContentResolver().update(AddressBookContract.CONTENT_URI, values, "_id="+id, null);
+        Log.d(TAG, photoPath);
+        int res = mContext.getContentResolver().update(AddressBookContract.CONTENT_URI, values, AddressBookContract._ID+"="+id, null);
         return res != -1;
     }
 
 
     public void deleteContact(int id){
-        mContext.getContentResolver().delete(AddressBookContract.CONTENT_URI, "_id="+id, null);
+        mContext.getContentResolver().delete(AddressBookContract.CONTENT_URI, AddressBookContract._ID+"="+id, null);
     }
 
     /**
@@ -117,7 +116,8 @@ public class BookManager {
      * @return
      *      File path to the photo
      */
-    private String saveFile(Bitmap photo) {
+    public static String saveFile(Bitmap photo) {
+        // Delete old?
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/media";
         File dir = new File(file_path);
         String path =  "pp" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + ".png";

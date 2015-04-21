@@ -32,9 +32,10 @@ public class AddActivity extends ActionBarActivity {
     private TextView mPhone;
     private TextView mEmail;
     private ImageView mPhoto;
+    private String mPhotoString;
 
     private final int RESULT_LOAD_IMAGE = 1;
-    private final String TAG = "AddActivity";
+    private static final String TAG = "AddActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class AddActivity extends ActionBarActivity {
             public void onClick(View v) {
                 boolean success = bookManager.addContact(mFirstName.getText().toString(),
                         mLastName.getText().toString(), mPhone.getText().toString(),
-                        mEmail.getText().toString(), ((BitmapDrawable)mPhoto.getDrawable()).getBitmap());
+                        mEmail.getText().toString(), mPhotoString);
                 if(!success){
                     Toast.makeText(mContext, "Something went wrong, check data", Toast.LENGTH_LONG).show();
                 }else{
@@ -82,7 +83,10 @@ public class AddActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                Uri uri = data.getData();
+                Bitmap bitmap = Util.decodeUri(getContentResolver(), uri);
+
+                mPhotoString = BookManager.saveFile(bitmap);
                 mPhoto.setImageBitmap(bitmap);
             }catch(IOException e){
                 e.printStackTrace();

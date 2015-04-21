@@ -65,7 +65,7 @@ public class Person {
         this.email = email;
     }
 
-    public String getPhoto(){
+    public String getPhotoPath(){
         return photo;
     }
 
@@ -81,5 +81,8 @@ public class Person {
         this.photo = photo;
     }
 
+    public void setPhotoPath(String path){
+        this.photo = path;
+    }
 
 }
