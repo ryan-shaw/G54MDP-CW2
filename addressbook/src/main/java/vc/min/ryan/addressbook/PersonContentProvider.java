@@ -122,7 +122,7 @@ public class PersonContentProvider extends ContentProvider {
     @Override
     public String getType(Uri uri){
         switch(AddressBookContract.URI_MATCHER.match(uri)){
-            case AddressBookContract.CONTACTS:
+                        case AddressBookContract.CONTACTS:
                 return "vnd.android.cursor.dir/vnd.vc.min.addressbook." + AddressBookContract.TABLE_NAME;
             case AddressBookContract.PERSON:
                 return "vnd.android.cursor.item/vnd.vc.min.addressbook."+ AddressBookContract.TABLE_NAME;
