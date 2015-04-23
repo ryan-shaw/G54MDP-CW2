@@ -25,8 +25,8 @@ public final class AddressBookContract {
     public static final UriMatcher URI_MATCHER;
     static{
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI("vc.min.ryan.addressbook.Contacts", "contacts", CONTACTS);
-        URI_MATCHER.addURI("vc.min.ryan.addressbook.Contacts", "contacts/#", PERSON);
+        URI_MATCHER.addURI(PROVIDER, "contacts", CONTACTS);
+        URI_MATCHER.addURI(PROVIDER, "contacts/#", PERSON);
     }
 
     public static final String DATABASE_NAME = "Contacts";
