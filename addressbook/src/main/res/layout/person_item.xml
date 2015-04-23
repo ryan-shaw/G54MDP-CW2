@@ -16,7 +16,8 @@
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:id="@+id/mA_photo" />
+            android:id="@+id/maPhoto"
+            android:src="@drawable/ic_action_person" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -38,6 +39,5 @@
                 android:text="Medium Text"
                 android:id="@+id/phone" />
         </LinearLayout>
-
     </LinearLayout>
 </LinearLayout>

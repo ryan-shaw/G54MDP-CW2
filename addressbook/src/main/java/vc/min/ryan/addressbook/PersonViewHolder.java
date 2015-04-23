@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,15 +18,15 @@ import org.w3c.dom.Text;
 public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, View.OnCreateContextMenuListener{
     private ClickListener clickListener;
 
-    public TextView name;
-    public TextView phone;
-    public ImageView photo;
+    public TextView mName;
+    public TextView mPhone;
+    public ImageView mPhoto;
 
     public PersonViewHolder(View v){
         super(v);
-        name = (TextView) v.findViewById(R.id.name);
-        phone = (TextView) v.findViewById(R.id.phone);
-        photo = (ImageView) v.findViewById(R.id.mA_photo);
+        mName = (TextView) v.findViewById(R.id.name);
+        mPhone = (TextView) v.findViewById(R.id.phone);
+        mPhoto = (ImageView) v.findViewById(R.id.maPhoto);
         v.setOnCreateContextMenuListener(this);
     }
 
@@ -37,8 +38,9 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
 
-        menu.add(Menu.NONE, 0, Menu.NONE, "Edit");//groupId, itemId, order, title
-        menu.add(Menu.NONE, 1, Menu.NONE, "Delete");
+        menu.add(Menu.NONE, 0, Menu.NONE, "Call");
+        menu.add(Menu.NONE, 1, Menu.NONE, "Edit");//groupId, itemId, order, title
+        menu.add(Menu.NONE, 2, Menu.NONE, "Delete");
 
     }
 

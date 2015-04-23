@@ -3,6 +3,7 @@ package vc.min.ryan.addressbook;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Handler;
 import android.provider.LiveFolders;
 import android.support.v7.app.ActionBarActivity;
@@ -54,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View v, int pos) {
+                Log.d(TAG, v.toString());
                 Log.d(TAG, "Short click");
                 Person person = mBookManager.getData().get(pos);
                 Intent intent = new Intent(mContext, PersonActivity.class);
@@ -87,14 +89,20 @@ public class MainActivity extends ActionBarActivity {
     public boolean onContextItemSelected(MenuItem item) {
         Log.d(TAG, position + ":" + item.getItemId());
         int id = item.getItemId();
+        Person person = mAdapter.getData().get(position);
+        Intent intent;
         switch (item.getItemId()) {
-            case 0 /* Edit */:
-                Intent intent = new Intent(mContext, EditActivity.class);
-                intent.putExtra("personId", mAdapter.getData().get(position).getId());
+            case 0:
+                intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + person.getPhoneNumber()));
+                startActivity(intent);
+                break;
+            case 1 /* Edit */:
+                intent = new Intent(mContext, EditActivity.class);
+                intent.putExtra("personId", person.getId());
                 mContext.startActivity(intent);
             break;
-            case 1 /* Delete */:
-                Person person = mAdapter.getData().get(position);
+            case 2 /* Delete */:
                 mBookManager.deleteContact(person.getId());
             break;
         }

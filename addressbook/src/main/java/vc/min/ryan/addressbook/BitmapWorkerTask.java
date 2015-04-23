@@ -28,7 +28,7 @@ class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Integer... params) {
         if(mPerson.getPhotoPath() == null)
-           return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.select);
+           return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_person);
         Bitmap photo = mPerson.getPhotoBM();
         return photo;
     }

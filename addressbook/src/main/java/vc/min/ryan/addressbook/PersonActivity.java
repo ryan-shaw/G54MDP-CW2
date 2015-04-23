@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +26,8 @@ public class PersonActivity extends Activity {
     private TextView mLastName;
     private TextView mPhone;
     private TextView mEmail;
-
+    private ImageButton mBPhone;
+    private ImageButton mBEmail;
 
     private Context mContext;
     @Override
@@ -45,17 +49,26 @@ public class PersonActivity extends Activity {
         mLastName = (TextView) findViewById(R.id.piLastName);
         mPhone = (TextView) findViewById(R.id.piNumber);
         mEmail = (TextView) findViewById(R.id.piEmail);
+        mBPhone = (ImageButton) findViewById(R.id.piBPhone);
 
         mBookManager = new BookManager(this);
-        Person person = mBookManager.getPerson(id);
-        if(person.getPhotoPath() == null)
-            mPicture.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.select));
-        else
+
+        final Person person = mBookManager.getPerson(id);
+        if(person.getPhotoPath() != null)
             mPicture.setImageBitmap(person.getPhotoBM());
 
         mFirstName.setText(person.getFirstName());
         mLastName.setText(person.getLastName());
         mPhone.setText(person.getPhoneNumber());
         mEmail.setText(person.getEmail());
+
+        mBPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + person.getPhoneNumber()));
+                startActivity(intent);
+            }
+        });
     }
 }

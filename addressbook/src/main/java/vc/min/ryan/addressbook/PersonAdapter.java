@@ -11,6 +11,7 @@ import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,20 +27,6 @@ import java.util.List;
  */
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-
-        public AsyncDrawable(Resources res, Bitmap bitmap,
-                             BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskReference =
-                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-        }
-
-        public BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
-    }
     private List<Person> mDataset;
     private final String TAG = "PersonAdapter";
     private Context mContext;
@@ -52,10 +39,10 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     @Override
     public void onBindViewHolder(final PersonViewHolder holder, final int position){
         final Person person = mDataset.get(position);
-        holder.name.setText(person.getFirstName() + " " + person.getLastName());
-        holder.phone.setText(person.getPhoneNumber());
-        // Set ImageView via AsyncTask
-        BitmapWorkerTask task = new BitmapWorkerTask(mContext, (ImageView) holder.photo, person);
+        holder.mName.setText(person.getFirstName() + " " + person.getLastName());
+        holder.mPhone.setText(person.getPhoneNumber());
+        // Set ImageView via AsyncTask, prevents the UI thread from taking too long, so don't cause ANR
+        BitmapWorkerTask task = new BitmapWorkerTask(mContext, (ImageView) holder.mPhoto, person);
         task.execute(0);
     }
 
