@@ -30,7 +30,9 @@ public class PersonContentProvider extends ContentProvider {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
+            // Delete data
             db.execSQL("DROP TABLE IF EXISTS " + AddressBookContract.TABLE_NAME);
+            // Recreate table
             onCreate(db);
         }
     }
@@ -52,17 +54,16 @@ public class PersonContentProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(luri, null);
             return uri;
         }
+        // Null if failed
         return null;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder){
-        // Create the query builder
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        // Set the table to execute query on
         builder.setTables(AddressBookContract.TABLE_NAME);
-        // Are we matching for a single contact or all contacts
+        // The switch case is used to check if we want all contacts or just one
         switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 builder.setProjectionMap(AddressBookContract.CONTACTS_MAP);
@@ -71,7 +72,7 @@ public class PersonContentProvider extends ContentProvider {
                 builder.appendWhere(AddressBookContract._ID + "=" + uri.getPathSegments().get(1));
             break;
             default:
-                throw new IllegalArgumentException("unknown uri " + uri);
+                throw new IllegalArgumentException("unknown uri: " + uri);
         }
         if(sortOrder == null || sortOrder == ""){
             // Set to order by first name
@@ -93,8 +94,9 @@ public class PersonContentProvider extends ContentProvider {
                 String id = uri.getPathSegments().get(1);
                 count = mDb.delete(AddressBookContract.TABLE_NAME, AddressBookContract._ID + " = " + id + (!TextUtils.isEmpty(selection) ?
                 " AND (" + selection + ")" : ""), selectionArgs);
+                break;
             default:
-                throw new IllegalArgumentException("unknown uri " + uri);
+                throw new IllegalArgumentException("unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
@@ -113,7 +115,7 @@ public class PersonContentProvider extends ContentProvider {
                         selectionArgs);
                 break;
             default:
-                throw new IllegalArgumentException("unknown uri " + uri);
+                throw new IllegalArgumentException("unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
@@ -127,7 +129,7 @@ public class PersonContentProvider extends ContentProvider {
             case AddressBookContract.PERSON:
                 return "vnd.android.cursor.item/vnd.vc.min.addressbook."+ AddressBookContract.TABLE_NAME;
             default:
-                throw new IllegalArgumentException("unsupported uri " + uri);
+                throw new IllegalArgumentException("unknown uri: " + uri);
         }
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * Created by Ryan on 25/03/2015.
- * AsyncDrawable taken from http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
+ * Followed AsyncDrawable guide from http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
  * As it was taking a long to time load bitmaps on the main thread, caused hangs.
  */
 
@@ -30,10 +30,12 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     private List<Person> mDataset;
     private final String TAG = "PersonAdapter";
     private Context mContext;
+    private BookManager mBookManager;
 
-    public PersonAdapter(List<Person> data, Context context){
+    public PersonAdapter(List<Person> data, BookManager bookManager, Context context){
         this.mDataset = data;
         this.mContext = context;
+        this.mBookManager = bookManager;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         holder.mName.setText(person.getFirstName() + " " + person.getLastName());
         holder.mPhone.setText(person.getPhoneNumber());
         // Set ImageView via AsyncTask, prevents the UI thread from taking too long, so don't cause ANR
-        BitmapWorkerTask task = new BitmapWorkerTask(mContext, (ImageView) holder.mPhoto, person);
+        BitmapWorkerTask task = new BitmapWorkerTask(mContext, holder.mPhoto, person);
         task.execute(0);
     }
 
@@ -50,7 +52,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.person_item, parent, false);
 
-        return new PersonViewHolder(v);
+        return new PersonViewHolder(v, mBookManager, mContext);
     }
 
     public int getItemCount(){

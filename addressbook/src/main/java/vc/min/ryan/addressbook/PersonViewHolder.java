@@ -1,6 +1,10 @@
 package vc.min.ryan.addressbook;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
@@ -21,26 +25,57 @@ public class PersonViewHolder extends RecyclerView.ViewHolder implements View.On
     public TextView mName;
     public TextView mPhone;
     public ImageView mPhoto;
+    public ImageButton mBPhone;
+    public ImageButton mBSMS;
 
-    public PersonViewHolder(View v){
+    private static final String TAG = "PersonViewHolder";
+
+    public PersonViewHolder(View v, final BookManager bookManager, final Context context){
         super(v);
         mName = (TextView) v.findViewById(R.id.name);
         mPhone = (TextView) v.findViewById(R.id.phone);
         mPhoto = (ImageView) v.findViewById(R.id.maPhoto);
+        mBPhone = (ImageButton) v.findViewById(R.id.maBCall);
+        mBSMS = (ImageButton) v.findViewById(R.id.maBSMS);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PersonActivity.class);
+                intent.putExtra("personId", bookManager.getData().get(getPosition()).getId());
+                context.startActivity(intent);
+            }
+        });
+        mBPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + bookManager.getData().get(getPosition()).getPhoneNumber()));
+                context.startActivity(intent);
+            }
+        });
+
+        mBSMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("sms:" + bookManager.getData().get(getPosition()).getPhoneNumber()));
+                context.startActivity(intent);
+            }
+        });
         v.setOnCreateContextMenuListener(this);
     }
 
-    public interface ClickListener{
+    public interface ClickListener {
         public void onClick(View v, int position, boolean isLongClick);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
-
-        menu.add(Menu.NONE, 0, Menu.NONE, "Call");
-        menu.add(Menu.NONE, 1, Menu.NONE, "Edit");//groupId, itemId, order, title
-        menu.add(Menu.NONE, 2, Menu.NONE, "Delete");
+        // Add the menu items
+        menu.add(Menu.NONE, MainActivity.CALL, Menu.NONE, "Call");
+        menu.add(Menu.NONE, MainActivity.EDIT, Menu.NONE, "Edit");
+        menu.add(Menu.NONE, MainActivity.DELETE, Menu.NONE, "Delete");
 
     }
 

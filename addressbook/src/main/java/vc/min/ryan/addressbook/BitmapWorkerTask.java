@@ -9,17 +9,16 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 /**
- * http://developer.android.com/training/displaying-bitmaps/process-bitmap.html
+ * Followed http://developer.android.com/training/displaying-bitmaps/process-bitmap.html to process bitmaps off UI thread
  */
 class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
-    private final WeakReference<ImageView> imageViewReference;
-    private int data = 0;
+    private final WeakReference<ImageView> mImgRef;
     private Person mPerson;
     private Context mContext;
 
     public BitmapWorkerTask(Context context, ImageView imageView, Person mPerson) {
-        // Use a WeakReference to ensure the ImageView can be garbage collected
-        imageViewReference = new WeakReference<ImageView>(imageView);
+        // Weak refernce allows imageView to still be garbage collected
+        mImgRef = new WeakReference<>(imageView);
         this.mContext = context;
         this.mPerson = mPerson;
     }
@@ -36,8 +35,8 @@ class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     // Once complete, see if ImageView is still around and set bitmap.
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (imageViewReference != null && bitmap != null) {
-            final ImageView imageView = imageViewReference.get();
+        if (mImgRef != null && bitmap != null) {
+            final ImageView imageView = mImgRef.get();
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
             }

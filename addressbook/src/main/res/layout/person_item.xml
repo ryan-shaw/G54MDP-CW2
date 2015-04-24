@@ -39,5 +39,18 @@
                 android:text="Medium Text"
                 android:id="@+id/phone" />
         </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maBCall"
+            android:src="@drawable/ic_action_call" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maBSMS"
+            android:src="@drawable/ic_action_chat" />
+
     </LinearLayout>
 </LinearLayout>

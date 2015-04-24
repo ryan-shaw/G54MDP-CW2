@@ -100,7 +100,6 @@ public class BookManager {
         values.put(AddressBookContract.PHONE_NUMBER, phone);
         values.put(AddressBookContract.EMAIL, email);
         values.put(AddressBookContract.PHOTO, photoPath);
-        Log.d(TAG, photoPath);
         int res = mContext.getContentResolver().update(AddressBookContract.CONTENT_URI, values, AddressBookContract._ID+"="+id, null);
         return res != -1;
     }
