@@ -1,5 +1,6 @@
-package vc.min.ryan.addressbook;
+package vc.min.ryan.addressbook.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,8 +23,12 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+import vc.min.ryan.addressbook.BookManager;
+import vc.min.ryan.addressbook.R;
+import vc.min.ryan.addressbook.Util;
 
-public class AddActivity extends ActionBarActivity {
+
+public class AddActivity extends Activity {
 
     private Button mAddButton;
     private Context mContext;
@@ -53,13 +58,17 @@ public class AddActivity extends ActionBarActivity {
         mEmail = (TextView) findViewById(R.id.email);
         mPhoto = (ImageView) findViewById(R.id.photo);
 
+        // Set click listeners
         mPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Log.d(TAG, "Photo selected");
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+
+                // Open up the image selector
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*"); // Only open up selector for photo apps, such as "Photos"
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Please select one..."), RESULT_LOAD_IMAGE);
             }
         });
 
@@ -82,15 +91,10 @@ public class AddActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
-            try {
-                Uri uri = data.getData();
-                Bitmap bitmap = Util.decodeUri(getContentResolver(), uri);
-
-                mPhotoString = BookManager.saveFile(bitmap);
-                mPhoto.setImageBitmap(bitmap);
-            }catch(IOException e){
-                e.printStackTrace();
-            }
+            Uri uri = data.getData();
+            Bitmap bitmap = Util.decodeUri(this, uri);
+            mPhoto.setImageBitmap(bitmap);
+            mPhotoString = uri.toString();
         }
     }
 }

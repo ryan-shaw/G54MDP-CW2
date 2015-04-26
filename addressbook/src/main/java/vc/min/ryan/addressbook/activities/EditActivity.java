@@ -1,13 +1,12 @@
-package vc.min.ryan.addressbook;
+package vc.min.ryan.addressbook.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,13 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import vc.min.ryan.addressbook.BookManager;
+import vc.min.ryan.addressbook.Person;
+import vc.min.ryan.addressbook.R;
+import vc.min.ryan.addressbook.Util;
 
 /**
  * Created by Ryan on 12/04/2015.
  */
-public class EditActivity extends ActionBarActivity {
+public class EditActivity extends Activity {
 
     private Button mEditButton;
     private Context mContext;
@@ -30,14 +34,13 @@ public class EditActivity extends ActionBarActivity {
     private TextView mPhone;
     private TextView mEmail;
     private ImageView mPhoto;
-    private BookManager mBookManager;
     private String mPhotoString;
+    private BookManager mBookManager;
 
     private final int RESULT_LOAD_IMAGE = 1;
     private final String TAG = "EditActivity";
     private int _id;
     private Person person;
-    private boolean mImageChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +62,11 @@ public class EditActivity extends ActionBarActivity {
         mEmail = (TextView) findViewById(R.id.email);
         mPhoto = (ImageView) findViewById(R.id.photo);
 
-        mEditButton.setText("Edit"); // Update text
+        mEditButton.setText("Edit"); // Update text as we are reusing add xml
 
-        mPhoto.setOnClickListener(new View.OnClickListener(){
+        mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                Log.d(TAG, "Photo selected");
+            public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);
@@ -74,50 +76,49 @@ public class EditActivity extends ActionBarActivity {
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Save");
-                Log.d(TAG, "Photo: " + mPhotoString);
                 boolean success = mBookManager.editContact(_id, mFirstName.getText().toString(),
-                      mLastName.getText().toString(), mPhone.getText().toString(),
-                      mEmail.getText().toString(), mPhotoString);
+                        mLastName.getText().toString(), mPhone.getText().toString(),
+                        mEmail.getText().toString(), mPhotoString);
 
-                if(!success){
+                if (!success) {
                     Toast.makeText(mContext, "Something went wrong, check data", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     finish();
                 }
             }
         });
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "onResume");
-        if(person == null) {
+        if (person == null) {
             Toast.makeText(this, "Person not found", Toast.LENGTH_LONG).show();
             return;
         }
-        Log.d(TAG, ""+mFirstName.getText());
         mFirstName.setText(person.getFirstName());
         mLastName.setText(person.getLastName());
         mPhone.setText(person.getPhoneNumber());
         mEmail.setText(person.getEmail());
-        mPhotoString = person.getPhotoPath();
-        mPhoto.setImageBitmap(person.getPhotoBM());
+        mPhotoString = person.getPhotoURI();
+        if (mPhotoString != null) {
+            mPhoto.setImageBitmap(Util.decodeUri(this, mPhotoString));
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            Log.d(TAG, uri.toString());
             try {
-                Uri uri = data.getData();
-                Bitmap bitmap = Util.decodeUri(getContentResolver(), uri);
-                mPhotoString = BookManager.saveFile(bitmap);
-                mPhoto.setImageBitmap(bitmap);
-                person.setPhotoPath(mPhotoString);
-            }catch(IOException e){
-                e.printStackTrace();
+                InputStream is = getContentResolver().openInputStream(uri);
+                mPhoto.setImageBitmap(BitmapFactory.decodeStream(is));
+                mPhotoString = uri.toString();
+            }catch(FileNotFoundException e){
+                Toast.makeText(this, "File not found", Toast.LENGTH_LONG).show();
             }
         }
     }

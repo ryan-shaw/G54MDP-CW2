@@ -5,11 +5,14 @@
     android:weightSum="1">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_width="fill_parent"
         android:id="@+id/piPhoto"
-        android:layout_weight="0.31"
-        android:src="@drawable/ic_action_person" />
+        android:src="@drawable/ic_action_person"
+        android:transitionName="photo"
+        android:scaleType="centerCrop"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:adjustViewBounds="true" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,58 +23,69 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/piFirstName" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/piName"
+                android:textColor="@color/primary"
+                android:transitionName="name"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginLeft="6dp"
-                android:id="@+id/piLastName"
-                />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/piNumber" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/piNumber"
+            android:paddingLeft="10dp"
+            android:textColor="@color/secondary"
+            android:transitionName="phone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/piEmail" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/piEmail"
+            android:paddingLeft="10dp"
+            android:textColor="@color/secondary"/>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.2">
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/piBPhone"
-                android:src="@drawable/ic_action_call" />
+                android:src="@drawable/ic_action_call"
+                android:background="@android:color/transparent"
+                android:layout_margin="10dp"
+                android:transitionName="bPhone"
+                />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/piBSMS"
-                android:src="@drawable/ic_action_chat" />
+                android:src="@drawable/ic_action_chat"
+                android:background="@android:color/transparent"
+                android:layout_margin="10dp"
+                android:transitionName="bSMS"/>
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/piBEmail"
-                android:src="@drawable/ic_action_email" />
+                android:src="@drawable/ic_action_email"
+                android:background="@android:color/transparent"
+                android:layout_margin="10dp"/>
         </LinearLayout>
     </LinearLayout>
 

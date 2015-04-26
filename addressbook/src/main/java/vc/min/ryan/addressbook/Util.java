@@ -1,6 +1,8 @@
 package vc.min.ryan.addressbook;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,40 +16,24 @@ import java.io.FileNotFoundException;
  */
 public class Util {
     /**
-     * Downsample when collecting image from photo select
-     * Source: http://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
-     * @param content
-     * @param selectedImage
+     * @param context
+     * @param uri
      * @return
      * @throws FileNotFoundException
      */
-    public static Bitmap decodeUri(ContentResolver content, Uri selectedImage) throws FileNotFoundException {
+    public static Bitmap decodeUri(Context context, String uri)  {
+        if(uri == null) return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_action_person);
+        return decodeUri(context, Uri.parse(uri));
+    }
 
-        // Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(content.openInputStream(selectedImage), null, o);
-
-        // The new size we want to scale to
-        final int REQUIRED_SIZE = 400;
-
-        // Find the correct scale value. It should be the power of 2.
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE
-                    || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
-            }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
+    public static Bitmap decodeUri(Context context, Uri uri){
+        if(uri == null) return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_action_person);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 10;
+        try {
+            return BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
+        }catch(FileNotFoundException e){
+            return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_action_person);
         }
-
-        // Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(content.openInputStream(selectedImage), null, o2);
-
     }
 }

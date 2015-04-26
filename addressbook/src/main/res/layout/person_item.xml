@@ -14,11 +14,14 @@
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/maPhoto"
-            android:src="@drawable/ic_action_person" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
 
+            android:id="@+id/maPhoto"
+            android:src="@drawable/ic_action_person"
+            android:transitionName="photo"
+            android:scaleType="centerCrop"
+            android:layout_margin="5dp"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
@@ -29,28 +32,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/name" />
+                android:id="@+id/name"
+                android:textColor="@color/primary"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/phone" />
+                android:textColor="@color/secondary"
+                android:id="@+id/phone"
+                android:transitionName="phone"/>
         </LinearLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maBCall"
-            android:src="@drawable/ic_action_call" />
+            android:src="@drawable/ic_action_call"
+            android:background="@android:color/transparent"
+            android:layout_margin="10dp"
+            android:transitionName="bPhone"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maBSMS"
-            android:src="@drawable/ic_action_chat" />
+            android:src="@drawable/ic_action_chat"
+            android:background="@android:color/transparent"
+            android:layout_margin="10dp"
+            android:transitionName="bSMS"/>
 
     </LinearLayout>
 </LinearLayout>

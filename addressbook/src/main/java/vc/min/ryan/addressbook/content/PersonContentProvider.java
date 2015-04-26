@@ -1,4 +1,4 @@
-package vc.min.ryan.addressbook;
+package vc.min.ryan.addressbook.content;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -85,7 +85,7 @@ public class PersonContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs){
-        int count = 0;
+        int count;
         switch(AddressBookContract.URI_MATCHER.match(uri)){
             case AddressBookContract.CONTACTS:
                 count = mDb.delete(AddressBookContract.TABLE_NAME, selection, selectionArgs);

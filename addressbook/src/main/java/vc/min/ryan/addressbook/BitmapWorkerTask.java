@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
 /**
  * Followed http://developer.android.com/training/displaying-bitmaps/process-bitmap.html to process bitmaps off UI thread
  */
-class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     private final WeakReference<ImageView> mImgRef;
     private Person mPerson;
     private Context mContext;
@@ -26,9 +26,7 @@ class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     // Decode image in background.
     @Override
     protected Bitmap doInBackground(Integer... params) {
-        if(mPerson.getPhotoPath() == null)
-           return BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_person);
-        Bitmap photo = mPerson.getPhotoBM();
+        Bitmap photo = Util.decodeUri(mContext, mPerson.getPhotoURI());
         return photo;
     }
 

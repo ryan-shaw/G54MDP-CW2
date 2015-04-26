@@ -1,4 +1,4 @@
-package vc.min.ryan.addressbook;
+package vc.min.ryan.addressbook.content;
 
 import android.content.UriMatcher;
 import android.net.Uri;
@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 /**
  * Created by Ryan on 26/03/2015.
+ *
+ * Contract class for the content provider
  */
 public final class AddressBookContract {
     public static final String      PROVIDER        = "vc.min.ryan.addressbook.Contacts";

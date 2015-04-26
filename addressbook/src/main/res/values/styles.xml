@@ -1,8 +1,31 @@
 <resources>
+    <color name="primary">#FF9933</color>
+    <color name="primary_dark">#DD7711</color>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+    <color name="secondary">#808080</color>
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">@transition/change_image_transform</item>
+        <item name="android:colorAccent">@color/secondary</item>
+
     </style>
 
+    <style name="ActionBar" parent="@android:style/Widget.Material.Light.ActionBar">
+        <item name="android:background">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:icon">@android:color/transparent</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleText</item>
+    </style>
+
+    <style name="ActionBarTitleText"
+        parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#fff</item>
+    </style>
 </resources>

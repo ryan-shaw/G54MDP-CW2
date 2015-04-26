@@ -4,22 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.location.Address;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import vc.min.ryan.addressbook.content.AddressBookContract;
 
 /**
  * Created by Ryan on 25/03/2015.
@@ -32,6 +28,11 @@ public class BookManager {
         this.mContext = context;
     }
 
+    /**
+     * Get an individual
+     * @param id
+     * @return A Person object
+     */
     public Person getPerson(int id){
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, AddressBookContract._ID + "=" + id, null, null);
         if(!c.moveToFirst())
@@ -41,6 +42,10 @@ public class BookManager {
         return person;
     }
 
+    /**
+     * Get a list of Person objects
+     * @return List of Person objects
+     */
     public List<Person> getData(){
         ArrayList<Person> data = new ArrayList<Person>();
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, null, null, "firstName");
@@ -54,6 +59,11 @@ public class BookManager {
         return data;
     }
 
+    /**
+     * Get a person from a cursor
+     * @param c, cursor object for
+     * @return A Person object from the cursor's current position
+     */
     public Person getPersonFromCursor(Cursor c){
         Person person = new Person(
                 c.getInt(c.getColumnIndex("_id")),
@@ -65,6 +75,15 @@ public class BookManager {
         return person;
     }
 
+    /**
+     * Add a contact to the ContentProvider
+     * @param firstName
+     * @param lastName
+     * @param phone
+     * @param email
+     * @param photoPath
+     * @return true if success, false if not successful
+     */
     public boolean addContact(String firstName, String lastName, String phone, String email, String photoPath){
 
         if(firstName.length() == 0)
@@ -85,6 +104,16 @@ public class BookManager {
         return uri != null;
     }
 
+    /**
+     * Edit a contact
+     * @param id
+     * @param firstName
+     * @param lastName
+     * @param phone
+     * @param email
+     * @param photoPath
+     * @return true if success, false if not successful
+     */
     public boolean editContact(int id, String firstName, String lastName, String phone, String email,
                                String photoPath){
         if(firstName.length() == 0)
@@ -104,38 +133,13 @@ public class BookManager {
         return res != -1;
     }
 
-
-    public void deleteContact(int id){
-        mContext.getContentResolver().delete(AddressBookContract.CONTENT_URI, AddressBookContract._ID+"="+id, null);
-    }
-
     /**
-     * Save file to external storage
-     * @param photo
-     * @return
-     *      File path to the photo
+     * Delete a contact
+     * @param id, delete by ID
+     * @return true if success, false if not successful
      */
-    public static String saveFile(Bitmap photo) {
-        // Delete old?
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/media";
-        File dir = new File(file_path);
-        String path =  "pp" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + ".png";
-
-        if (!dir.exists())
-            dir.mkdirs();
-        try {
-            File file = new File(dir, path);
-            FileOutputStream fOut = new FileOutputStream(file);
-
-            photo.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-            fOut.flush();
-            fOut.close();
-        }catch(Exception e){
-            Log.e(TAG, "err", e);
-
-            return null;
-        }
-
-        return path;
+    public boolean deleteContact(int id){
+        int res = mContext.getContentResolver().delete(AddressBookContract.CONTENT_URI, AddressBookContract._ID+"="+id, null);
+        return res != -1;
     }
 }
