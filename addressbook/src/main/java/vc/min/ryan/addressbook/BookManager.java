@@ -50,6 +50,7 @@ public class BookManager {
         ArrayList<Person> data = new ArrayList<Person>();
         Cursor c = mContext.getContentResolver().query(AddressBookContract.CONTENT_URI, null, null, null, "firstName");
 
+        // Convert the list an ArrayList of Person objects
         c.moveToFirst();
         while(!c.isAfterLast()){
             data.add(getPersonFromCursor(c));
@@ -61,7 +62,7 @@ public class BookManager {
 
     /**
      * Get a person from a cursor
-     * @param c, cursor object for
+     * @param c, cursor object
      * @return A Person object from the cursor's current position
      */
     public Person getPersonFromCursor(Cursor c){
@@ -86,6 +87,7 @@ public class BookManager {
      */
     public boolean addContact(String firstName, String lastName, String phone, String email, String photoPath){
 
+        // Verification checks
         if(firstName.length() == 0)
             return false;
         if(lastName.length() == 0)
@@ -93,6 +95,7 @@ public class BookManager {
         if(phone.length() == 0)
             return false;
 
+        // Set ContentValues from parameters
         ContentValues values = new ContentValues();
         values.put(AddressBookContract.FIRST_NAME, firstName);
         values.put(AddressBookContract.LAST_NAME, lastName);
@@ -100,7 +103,9 @@ public class BookManager {
         values.put(AddressBookContract.EMAIL, email);
         values.put(AddressBookContract.PHOTO, photoPath);
 
+        // Insert
         Uri uri = mContext.getContentResolver().insert(AddressBookContract.CONTENT_URI, values);
+        // If URI is null it failed
         return uri != null;
     }
 
@@ -114,8 +119,8 @@ public class BookManager {
      * @param photoPath
      * @return true if success, false if not successful
      */
-    public boolean editContact(int id, String firstName, String lastName, String phone, String email,
-                               String photoPath){
+    public boolean editContact(int id, String firstName, String lastName, String phone, String email, String photoPath){
+        // Verification checks
         if(firstName.length() == 0)
             return false;
         if(lastName.length() == 0)
@@ -123,12 +128,15 @@ public class BookManager {
         if(phone.length() == 0)
             return false;
 
+        // Set ContentValues
         ContentValues values = new ContentValues();
         values.put(AddressBookContract.FIRST_NAME, firstName);
         values.put(AddressBookContract.LAST_NAME, lastName);
         values.put(AddressBookContract.PHONE_NUMBER, phone);
         values.put(AddressBookContract.EMAIL, email);
         values.put(AddressBookContract.PHOTO, photoPath);
+
+        // Update record in database
         int res = mContext.getContentResolver().update(AddressBookContract.CONTENT_URI, values, AddressBookContract._ID+"="+id, null);
         return res != -1;
     }

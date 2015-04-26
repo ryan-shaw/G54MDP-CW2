@@ -40,7 +40,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         mContext = this;
@@ -55,10 +54,8 @@ public class MainActivity extends Activity {
         mAdapter = new PersonAdapter(mBookManager.getData(), mBookManager, this);
 
         mRecyclerView.setAdapter(mAdapter);
-        Transition exitTrans = new Explode();
-        getWindow().setExitTransition(exitTrans);
-        Transition reenterTrans = new Slide();
-        getWindow().setReenterTransition(reenterTrans);
+
+
         // Set listeners
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +64,7 @@ public class MainActivity extends Activity {
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
             }
         });
+
         // Gets called when database updated
         getContentResolver().registerContentObserver(AddressBookContract.CONTENT_URI, true, new ContentObserver(new Handler()){
             @Override
@@ -97,6 +95,7 @@ public class MainActivity extends Activity {
                 mContext.startActivity(intent);
             break;
             case DELETE:
+                // Delete person
                 mBookManager.deleteContact(person.getId());
             break;
         }

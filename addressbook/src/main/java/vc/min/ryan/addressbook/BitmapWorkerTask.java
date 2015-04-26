@@ -17,7 +17,7 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     private Context mContext;
 
     public BitmapWorkerTask(Context context, ImageView imageView, Person mPerson) {
-        // Weak refernce allows imageView to still be garbage collected
+        // Weak refernce allows ImageView to still be garbage collected, even if we still have it referenced here
         mImgRef = new WeakReference<>(imageView);
         this.mContext = context;
         this.mPerson = mPerson;
@@ -33,10 +33,11 @@ public class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
     // Once complete, see if ImageView is still around and set bitmap.
     @Override
     protected void onPostExecute(Bitmap bitmap) {
+        // Check we still have the reference and that the bitmap exists
         if (mImgRef != null && bitmap != null) {
-            final ImageView imageView = mImgRef.get();
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
+            final ImageView imageView = mImgRef.get(); // Get the ImageView from the WeakReference
+            if (imageView != null) { // Check Image exists
+                imageView.setImageBitmap(bitmap); // Set ImageView with Bitmap
             }
         }
     }

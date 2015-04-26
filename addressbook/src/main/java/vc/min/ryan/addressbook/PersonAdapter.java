@@ -28,7 +28,6 @@ import java.util.List;
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     private List<Person> mDataset;
-    private final String TAG = "PersonAdapter";
     private Context mContext;
     private BookManager mBookManager;
 
@@ -41,6 +40,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     @Override
     public void onBindViewHolder(final PersonViewHolder holder, final int position){
         final Person person = mDataset.get(position);
+        // Set content of Views in the ListItem
         holder.mName.setText(person.getFirstName() + " " + person.getLastName());
         holder.mPhone.setText(person.getPhoneNumber());
         // Set ImageView via AsyncTask, prevents the UI thread from taking too long, so don't cause ANR

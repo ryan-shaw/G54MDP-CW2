@@ -50,7 +50,7 @@ public class AddActivity extends Activity {
 
         final BookManager bookManager = new BookManager(this);
 
-
+        // Setup views
         mAddButton = (Button) findViewById(R.id.add_contact);
         mFirstName = (TextView) findViewById(R.id.firstName);
         mLastName = (TextView) findViewById(R.id.lastName);
@@ -62,19 +62,17 @@ public class AddActivity extends Activity {
         mPhoto.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Log.d(TAG, "Photo selected");
-
                 // Open up the image selector
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*"); // Only open up selector for photo apps, such as "Photos"
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Please select one..."), RESULT_LOAD_IMAGE);
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Add person
                 boolean success = bookManager.addContact(mFirstName.getText().toString(),
                         mLastName.getText().toString(), mPhone.getText().toString(),
                         mEmail.getText().toString(), mPhotoString);
@@ -90,6 +88,7 @@ public class AddActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
+        // Check we have the expected requestCode and resultCode is ok, and data is available.
         if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
             Uri uri = data.getData();
             Bitmap bitmap = Util.decodeUri(this, uri);

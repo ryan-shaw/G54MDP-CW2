@@ -65,6 +65,7 @@ public class PersonActivity extends Activity {
 
         final Person person = mBookManager.getPerson(id);
 
+        // Asynchronously load the photo
         BitmapWorkerTask task = new BitmapWorkerTask(mContext, mPhoto, person);
         task.execute(0);
 
@@ -73,6 +74,8 @@ public class PersonActivity extends Activity {
         mName.setText(person.getFirstName() + " " + person.getLastName());
         mPhone.setText(person.getPhoneNumber());
         mEmail.setText(person.getEmail());
+
+        // If there is no email hide the email button
         if(person.getEmail().equals("") || person.getEmail() == null){
             mBEmail.setVisibility(View.GONE);
         }
@@ -80,6 +83,7 @@ public class PersonActivity extends Activity {
         mBPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Launch the phone call
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + person.getPhoneNumber()));
                 try {
@@ -93,6 +97,7 @@ public class PersonActivity extends Activity {
         mBSMS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Launch the SMS application
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse("sms:" + person.getPhoneNumber()));
                 try {
@@ -106,6 +111,7 @@ public class PersonActivity extends Activity {
         mBEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Launch an email application
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setData(Uri.parse("mailto:" + person.getEmail()));
                 try {

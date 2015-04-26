@@ -55,6 +55,7 @@ public class EditActivity extends Activity {
 
         person = mBookManager.getPerson(_id);
 
+        // Setup views
         mEditButton = (Button) findViewById(R.id.add_contact);
         mFirstName = (TextView) findViewById(R.id.firstName);
         mLastName = (TextView) findViewById(R.id.lastName);
@@ -64,6 +65,7 @@ public class EditActivity extends Activity {
 
         mEditButton.setText("Edit"); // Update text as we are reusing add xml
 
+        // Setup click listeners
         mPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,32 +93,29 @@ public class EditActivity extends Activity {
             Toast.makeText(this, "Person not found", Toast.LENGTH_LONG).show();
             return;
         }
+
+        // Set text in TextViews
         mFirstName.setText(person.getFirstName());
         mLastName.setText(person.getLastName());
         mPhone.setText(person.getPhoneNumber());
         mEmail.setText(person.getEmail());
         mPhotoString = person.getPhotoURI();
         if (mPhotoString != null) {
+            // If the Person has a photo set the ImageView.
             mPhoto.setImageBitmap(Util.decodeUri(this, mPhotoString));
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Check we have the expected requestCode and resultCode is ok, and data is available.
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
-            Log.d(TAG, uri.toString());
             try {
                 InputStream is = getContentResolver().openInputStream(uri);
-                mPhoto.setImageBitmap(BitmapFactory.decodeStream(is));
-                mPhotoString = uri.toString();
+                mPhoto.setImageBitmap(BitmapFactory.decodeStream(is)); // Set Image from URI
+                mPhotoString = uri.toString(); // Set the photo string to the URI
             }catch(FileNotFoundException e){
                 Toast.makeText(this, "File not found", Toast.LENGTH_LONG).show();
             }

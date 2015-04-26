@@ -11,7 +11,8 @@ import java.io.InputStream;
 /**
  * Created by Ryan on 25/03/2015.
  *
- * This will hold all properties for a person
+ * This object holds all properties for a Person object
+ *
  */
 public class Person {
 
